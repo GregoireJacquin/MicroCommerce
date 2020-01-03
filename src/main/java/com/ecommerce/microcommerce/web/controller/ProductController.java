@@ -33,6 +33,14 @@ public class ProductController {
     public Product affciherUnProduit(@PathVariable int id){
         return productDao.findById(id);
     }
+    @GetMapping(value = "test/produits/{prixLimit}")
+    public List<Product> testeDeRequetes(@PathVariable int prixLimit) {
+        return productDao.findByPrixGreaterThan(400);
+    }
+    @GetMapping(value = "test/produits/{recherche}")
+    public List<Product> testeDeRequetes(@PathVariable String recherche) {
+        return productDao.findByNomLike("%"+recherche+"%");
+    }
     @PostMapping(value = "/Produits")
     public ResponseEntity<Void> ajouterProduit(@RequestBody Product product) {
         Product productAdded = productDao.save(product);
@@ -45,5 +53,14 @@ public class ProductController {
                 .buildAndExpand(productAdded.getId())
                 .toUri();
         return ResponseEntity.created(location).build();
+    }
+    @DeleteMapping(value = "/Produits/{id}")
+    public void supprimerProduit(@PathVariable int id){
+        productDao.deleteById(id);
+    }
+    @PutMapping(value = "/Produits")
+    public void updateProduit(@RequestBody Product product)
+    {
+        productDao.save(product);
     }
 }
